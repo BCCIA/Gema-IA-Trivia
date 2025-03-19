@@ -35,7 +35,7 @@ class DIDChat {
     this.container = document.getElementById(containerId);
     // AQUI VAS A PODER MODIFICAR EL LINK CUANDO QUIERES ASEGURATE DE PONER EL LINK EN COMILLAS. EJEMPLO:"https://studio.d-id.com";
     this.chatUrl =
-      "https://studio.d-id.com/agents/share?id=agt_eYKr4muw&utm_source=copy&key=WjI5dloyeGxMVzloZFhSb01ud3hNRGszTnpjek1EVTBPREUxTVRZM05qRTNOalE2ZFRFelptbGFjVzUzWm00ellqUk5SRUZyVVhjeA==";
+      "https://studio.d-id.com/agents/share?id=agt_Y49ElagU&utm_source=copy&key=WjI5dloyeGxMVzloZFhSb01ud3hNRGt4TlRRMk16Z3hOamMwTVRRNE16Y3dOems2TVVGQlFUVlVjRm8yUWsxVE5tNXJaM1JpUlU0MA==";
     this.iframe = null;
     this.init();
   }
