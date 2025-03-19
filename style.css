@@ -53,10 +53,6 @@ body {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-#chat-container:hover {
-  transform: none;
-  box-shadow: none;
-}
 
 .iframe-wrapper {
   position: absolute;
