@@ -1,3 +1,5 @@
+// ----------------- SEGURIDAD Y NAVEGACIÓN -----------------
+
 // Deshabilitar clic derecho en la página principal
 document.addEventListener("contextmenu", (e) => e.preventDefault());
 
@@ -30,10 +32,11 @@ const showMenu = (toggleId, navId) => {
 
 showMenu("nav-toggle", "nav-menu");
 
+// ----------------- CHAT D-ID -----------------
+
 class DIDChat {
   constructor(containerId) {
     this.container = document.getElementById(containerId);
-    // AQUI VAS A PODER MODIFICAR EL LINK CUANDO QUIERES ASEGURATE DE PONER EL LINK EN COMILLAS. EJEMPLO:"https://studio.d-id.com";
     this.chatUrl =
       "https://studio.d-id.com/agents/share?id=agt_Y49ElagU&utm_source=copy&key=WjI5dloyeGxMVzloZFhSb01ud3hNRGt4TlRRMk16Z3hOamMwTVRRNE16Y3dOems2TVVGQlFUVlVjRm8yUWsxVE5tNXJaM1JpUlU0MA==";
     this.iframe = null;
@@ -61,6 +64,8 @@ class DIDChat {
 document.addEventListener("DOMContentLoaded", () => {
   const chat = new DIDChat("chat-container");
 });
+
+// ----------------- GSAP ANIMACIONES -----------------
 
 gsap.to(".first", 1.5, {
   delay: 0.5,
@@ -123,3 +128,57 @@ gsap.from(".home-social", {
   ease: "expo.out",
   stagger: 0.2,
 });
+
+// ----------------- REFRESCO AUTOMÁTICO CADA 30 SEG -----------------
+
+function iniciarRefresco() {
+  let refreshTimeout;
+  let cancelRefresh = false;
+
+  // Crear mensaje flotante si no existe
+  let message = document.getElementById('refresh-message');
+  if (!message) {
+    message = document.createElement('div');
+    message.id = 'refresh-message';
+    message.innerText = 'Refrescando a GEMA...';
+    message.style.position = 'fixed';
+    message.style.top = '50%';
+    message.style.left = '50%';
+    message.style.transform = 'translate(-50%, -50%)';
+    message.style.backgroundColor = 'rgba(0,0,0,0.8)';
+    message.style.color = '#fff';
+    message.style.padding = '20px 40px';
+    message.style.borderRadius = '10px';
+    message.style.fontSize = '24px';
+    message.style.zIndex = '9999';
+    message.style.display = 'none';
+    document.body.appendChild(message);
+  }
+
+  function startRefreshSequence() {
+    cancelRefresh = false;
+    message.style.display = 'block';
+
+    function cancelAction() {
+      cancelRefresh = true;
+      message.style.display = 'none';
+      clearTimeout(refreshTimeout);
+      document.removeEventListener('click', cancelAction);
+      document.removeEventListener('touchstart', cancelAction);
+      setTimeout(startRefreshSequence, 30 * 1000);
+    }
+
+    document.addEventListener('click', cancelAction);
+    document.addEventListener('touchstart', cancelAction);
+
+    refreshTimeout = setTimeout(() => {
+      if (!cancelRefresh) {
+        location.reload();
+      }
+    }, 5000);
+  }
+
+  setTimeout(startRefreshSequence, 30 * 1000); // <-- Cambia a 10 * 60 * 1000 luego
+}
+
+window.addEventListener('DOMContentLoaded', iniciarRefresco);
