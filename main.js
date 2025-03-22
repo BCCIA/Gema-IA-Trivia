@@ -38,7 +38,7 @@ class DIDChat {
   constructor(containerId) {
     this.container = document.getElementById(containerId);
     this.chatUrl =
-      "https://studio.d-id.com/agents/share?id=agt_Y49ElagU&utm_source=copy&key=WjI5dloyeGxMVzloZFhSb01ud3hNRGt4TlRRMk16Z3hOamMwTVRRNE16Y3dOems2TVVGQlFUVlVjRm8yUWsxVE5tNXJaM1JpUlU0MA==";
+      "https://studio.d-id.com/agents/share?id=agt_WhJPaSen&utm_source=copy&key=WVhWMGFEQjhOamRrWXpNeU16YzFPVFF5TTJKbFpUSTROMkkwTm1FMU9raDRTWFYwY1VoeFNYQk5jWGR6YlVsVWNXMDBUQT09";
     this.iframe = null;
     this.init();
   }
@@ -178,7 +178,7 @@ function iniciarRefresco() {
     }, 5000);
   }
 
-  setTimeout(startRefreshSequence, 30 * 1000); // <-- Cambia a 10 * 60 * 1000 luego
+  setTimeout(startRefreshSequence, 5 * 60 * 1000); // <-- Cambia a 10 * 60 * 1000 luego
 }
 
 window.addEventListener('DOMContentLoaded', iniciarRefresco);
