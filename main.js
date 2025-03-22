@@ -129,7 +129,7 @@ gsap.from(".home-social", {
   stagger: 0.2,
 });
 
-// ----------------- REFRESCO AUTOMÁTICO CADA 30 SEG -----------------
+// ----------------- REFRESCO AUTOMÁTICO CADA 5 MINUTOS -----------------
 
 function iniciarRefresco() {
   let refreshTimeout;
@@ -165,7 +165,9 @@ function iniciarRefresco() {
       clearTimeout(refreshTimeout);
       document.removeEventListener('click', cancelAction);
       document.removeEventListener('touchstart', cancelAction);
-      setTimeout(startRefreshSequence, 30 * 1000);
+
+      // Reiniciar el ciclo de 5 minutos si se canceló
+      setTimeout(startRefreshSequence, 5 * 60 * 1000);
     }
 
     document.addEventListener('click', cancelAction);
@@ -178,7 +180,8 @@ function iniciarRefresco() {
     }, 5000);
   }
 
-  setTimeout(startRefreshSequence, 5 * 60 * 1000); // <-- Cambia a 10 * 60 * 1000 luego
+  // Iniciar el primer ciclo a los 5 minutos
+  setTimeout(startRefreshSequence, 5 * 60 * 1000);
 }
 
 window.addEventListener('DOMContentLoaded', iniciarRefresco);
