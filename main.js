@@ -1,3 +1,26 @@
+// ----------------- SEGURIDAD: PROTECCIÓN POR PIN -----------------
+const PIN_CORRECTO = "5703";
+
+function accesoPermitido() {
+  return localStorage.getItem("pinAccesoAutorizado") === "true";
+}
+
+function solicitarPin() {
+  const pinIngresado = prompt("Por favor, introduce el PIN de acceso:");
+
+  if (pinIngresado === PIN_CORRECTO) {
+    localStorage.setItem("pinAccesoAutorizado", "true");
+  } else {
+    alert("PIN incorrecto. No tienes permiso para acceder.");
+    document.body.innerHTML = "<h1 style='text-align:center; padding-top:20%; font-family:sans-serif;'>Acceso denegado</h1>";
+    throw new Error("PIN incorrecto - ejecución detenida");
+  }
+}
+
+if (!accesoPermitido()) {
+  solicitarPin();
+}
+
 // ----------------- SEGURIDAD Y NAVEGACIÓN -----------------
 
 // Deshabilitar clic derecho en la página principal
@@ -135,7 +158,6 @@ function iniciarRefresco() {
   let refreshTimeout;
   let cancelRefresh = false;
 
-  // Crear mensaje flotante si no existe
   let message = document.getElementById('refresh-message');
   if (!message) {
     message = document.createElement('div');
@@ -165,8 +187,6 @@ function iniciarRefresco() {
       clearTimeout(refreshTimeout);
       document.removeEventListener('click', cancelAction);
       document.removeEventListener('touchstart', cancelAction);
-
-      // Reiniciar el ciclo de 5 minutos si se canceló
       setTimeout(startRefreshSequence, 5 * 60 * 1000);
     }
 
@@ -180,7 +200,6 @@ function iniciarRefresco() {
     }, 5000);
   }
 
-  // Iniciar el primer ciclo a los 5 minutos
   setTimeout(startRefreshSequence, 5 * 60 * 1000);
 }
 
