@@ -162,7 +162,7 @@ function iniciarRefresco() {
   if (!message) {
     message = document.createElement('div');
     message.id = 'refresh-message';
-    message.innerText = 'Refrescando a GEMA...';
+    message.innerText = 'Refrescando...';
     message.style.position = 'fixed';
     message.style.top = '50%';
     message.style.left = '50%';
