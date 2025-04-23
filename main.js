@@ -203,7 +203,7 @@ function iniciarRefresco() {
   setTimeout(startRefreshSequence, 5 * 60 * 1000);
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("DOMContentLoaded", () => {
   const refreshBtn = document.getElementById("refresh-btn");
 
   if (refreshBtn) {
