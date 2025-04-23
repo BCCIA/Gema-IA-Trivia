@@ -383,7 +383,7 @@ img {
 
 #refresh-btn {
   position: fixed;
-  bottom: 20px;
+  top: 20px;           /* Antes era bottom */
   right: 20px;
   background: transparent;
   border: none;
@@ -397,4 +397,5 @@ img {
 #refresh-btn:hover {
   opacity: 1;
 }
+
 
