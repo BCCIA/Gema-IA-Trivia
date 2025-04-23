@@ -203,9 +203,14 @@ function iniciarRefresco() {
   setTimeout(startRefreshSequence, 5 * 60 * 1000);
 }
 
-window.addEventListener('DOMContentLoaded', iniciarRefresco);
+document.addEventListener("DOMContentLoaded", () => {
+  const refreshBtn = document.getElementById("refresh-btn");
 
-document.getElementById("refresh-btn").addEventListener("click", () => {
-  location.reload();
+  if (refreshBtn) {
+    refreshBtn.addEventListener("click", () => {
+      location.reload();
+    });
+  }
 });
+
 
