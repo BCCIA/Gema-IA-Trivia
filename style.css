@@ -383,19 +383,20 @@ img {
 
 #refresh-btn {
   position: fixed;
-  top: 20px;           /* Antes era bottom */
+  top: 20px;
   right: 20px;
+  font-size: 36px;
+  color: white;
   background: transparent;
   border: none;
-  font-size: 28px;
   cursor: pointer;
   z-index: 9999;
   opacity: 0.6;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 #refresh-btn:hover {
   opacity: 1;
+  transform: rotate(20deg);
 }
-
 
