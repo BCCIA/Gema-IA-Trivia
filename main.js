@@ -204,3 +204,8 @@ function iniciarRefresco() {
 }
 
 window.addEventListener('DOMContentLoaded', iniciarRefresco);
+
+document.getElementById("refresh-btn").addEventListener("click", () => {
+  location.reload();
+});
+
