@@ -380,3 +380,21 @@ img {
     margin-right: auto;
   }
 }
+
+#refresh-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: transparent;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  z-index: 9999;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+
+#refresh-btn:hover {
+  opacity: 1;
+}
+
