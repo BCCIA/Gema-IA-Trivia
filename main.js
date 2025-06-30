@@ -1,4 +1,4 @@
-// ----------------- SEGURIDAD: PROTECCIÓN POR PIN -----------------
+// -------------------- SEGURIDAD: PROTECCIÓN POR PIN --------------------
 const PIN_CORRECTO = "5703";
 
 function accesoPermitido() {
@@ -21,12 +21,9 @@ if (!accesoPermitido()) {
   solicitarPin();
 }
 
-// ----------------- SEGURIDAD Y NAVEGACIÓN -----------------
-
-// Deshabilitar clic derecho en la página principal
+// -------------------- SEGURIDAD --------------------
 document.addEventListener("contextmenu", (e) => e.preventDefault());
 
-// Función para deshabilitar combinaciones de teclas (F12, Ctrl+Shift+I, etc.)
 function ctrlShiftKey(e, keyCode) {
   return e.ctrlKey && e.shiftKey && e.keyCode === keyCode.charCodeAt(0);
 }
@@ -42,6 +39,7 @@ document.onkeydown = (e) => {
     return false;
 };
 
+// -------------------- MENÚ --------------------
 const showMenu = (toggleId, navId) => {
   const toggle = document.getElementById(toggleId),
     nav = document.getElementById(navId);
@@ -55,8 +53,7 @@ const showMenu = (toggleId, navId) => {
 
 showMenu("nav-toggle", "nav-menu");
 
-// ----------------- CHAT D-ID -----------------
-
+// -------------------- CHAT D-ID --------------------
 class DIDChat {
   constructor(containerId) {
     this.container = document.getElementById(containerId);
@@ -88,8 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const chat = new DIDChat("chat-container");
 });
 
-// ----------------- GSAP ANIMACIONES -----------------
-
+// -------------------- GSAP ANIMACIONES --------------------
 gsap.to(".first", 1.5, {
   delay: 0.5,
   top: "-100%",
@@ -152,46 +148,59 @@ gsap.from(".home-social", {
   stagger: 0.2,
 });
 
-// ----------------- REFRESCO AUTOMÁTICO CADA 5 MINUTOS -----------------
-
+// -------------------- REFRESCO AUTOMÁTICO --------------------
 function iniciarRefresco() {
   let refreshTimeout;
   let cancelRefresh = false;
 
-  let message = document.getElementById('refresh-message');
+  let message = document.getElementById("refresh-message");
   if (!message) {
-    message = document.createElement('div');
-    message.id = 'refresh-message';
-    message.innerText = 'Refrescando...';
-    message.style.position = 'fixed';
-    message.style.top = '50%';
-    message.style.left = '50%';
-    message.style.transform = 'translate(-50%, -50%)';
-    message.style.backgroundColor = 'rgba(0,0,0,0.8)';
-    message.style.color = '#fff';
-    message.style.padding = '20px 40px';
-    message.style.borderRadius = '10px';
-    message.style.fontSize = '24px';
-    message.style.zIndex = '9999';
-    message.style.display = 'none';
+    message = document.createElement("div");
+    message.id = "refresh-message";
+    message.innerHTML = `
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <div class="spinner" style="border: 4px solid #f3f3f3; border-top: 4px solid #fff; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite;"></div>
+        <span>Refrescando a GEMA...</span>
+      </div>
+    `;
+    message.style.position = "fixed";
+    message.style.top = "50%";
+    message.style.left = "50%";
+    message.style.transform = "translate(-50%, -50%)";
+    message.style.backgroundColor = "rgba(0,0,0,0.85)";
+    message.style.color = "#fff";
+    message.style.padding = "20px 40px";
+    message.style.borderRadius = "10px";
+    message.style.fontSize = "22px";
+    message.style.zIndex = "9999";
+    message.style.display = "none";
     document.body.appendChild(message);
+
+    const style = document.createElement("style");
+    style.innerHTML = `
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    `;
+    document.head.appendChild(style);
   }
 
   function startRefreshSequence() {
     cancelRefresh = false;
-    message.style.display = 'block';
+    message.style.display = "block";
 
     function cancelAction() {
       cancelRefresh = true;
-      message.style.display = 'none';
+      message.style.display = "none";
       clearTimeout(refreshTimeout);
-      document.removeEventListener('click', cancelAction);
-      document.removeEventListener('touchstart', cancelAction);
+      document.removeEventListener("click", cancelAction);
+      document.removeEventListener("touchstart", cancelAction);
       setTimeout(startRefreshSequence, 5 * 60 * 1000);
     }
 
-    document.addEventListener('click', cancelAction);
-    document.addEventListener('touchstart', cancelAction);
+    document.addEventListener("click", cancelAction);
+    document.addEventListener("touchstart", cancelAction);
 
     refreshTimeout = setTimeout(() => {
       if (!cancelRefresh) {
@@ -202,6 +211,8 @@ function iniciarRefresco() {
 
   setTimeout(startRefreshSequence, 5 * 60 * 1000);
 }
+
+window.addEventListener("DOMContentLoaded", iniciarRefresco);
 
 window.addEventListener("DOMContentLoaded", () => {
   const refreshBtn = document.getElementById("refresh-btn");
