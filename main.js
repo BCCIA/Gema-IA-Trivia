@@ -160,7 +160,7 @@ function iniciarRefresco() {
     message.innerHTML = `
       <div style="display: flex; align-items: center; gap: 10px;">
         <div class="spinner" style="border: 4px solid #f3f3f3; border-top: 4px solid #fff; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite;"></div>
-        <span>Refrescando a GEMA...</span>
+        <span>Refrescando...</span>
       </div>
     `;
     message.style.position = "fixed";
