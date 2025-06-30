@@ -196,7 +196,7 @@ function iniciarRefresco() {
       clearTimeout(refreshTimeout);
       document.removeEventListener("click", cancelAction);
       document.removeEventListener("touchstart", cancelAction);
-      setTimeout(startRefreshSequence, 5 * 60 * 1000);
+      setTimeout(startRefreshSequence, 1 * 60 * 1000);
     }
 
     document.addEventListener("click", cancelAction);
@@ -209,7 +209,7 @@ function iniciarRefresco() {
     }, 5000);
   }
 
-  setTimeout(startRefreshSequence, 5 * 60 * 1000);
+  setTimeout(startRefreshSequence, 1 * 60 * 1000);
 }
 
 window.addEventListener("DOMContentLoaded", iniciarRefresco);
