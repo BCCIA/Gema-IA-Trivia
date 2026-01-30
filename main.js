@@ -1,27 +1,45 @@
-// -------------------- SEGURIDAD: PROTECCIÓN POR PIN --------------------
-const PIN_CORRECTO = "5703";
+// ----------------- CONFIGURACIÓN DE SEGURIDAD -----------------
+const PIN_CORRECTO = "5726";
 
-function accesoPermitido() {
-  return localStorage.getItem("pinAccesoAutorizado") === "true";
+function verificarEstadoBloqueo() {
+  const lockScreen = document.getElementById("lock-overlay");
+  if (!lockScreen) return;
+
+  // Si ya se ingresó el PIN anteriormente, quitamos el escudo invisible
+  if (localStorage.getItem("pinAccesoAutorizado") === "true") {
+    desbloquearPantalla();
+  }
+
+  // Evento: Al hacer clic en la capa invisible, pedir PIN
+  lockScreen.addEventListener("click", () => {
+    solicitarPin();
+  });
 }
 
 function solicitarPin() {
-  const pinIngresado = prompt("Por favor, introduce el PIN de acceso:");
+  setTimeout(() => {
+    const pinIngresado = prompt("🔒 STAND PROTEGIDO\nPor favor, introduce el PIN de acceso:");
 
-  if (pinIngresado === PIN_CORRECTO) {
-    localStorage.setItem("pinAccesoAutorizado", "true");
-  } else {
-    alert("PIN incorrecto. No tienes permiso para acceder.");
-    document.body.innerHTML = "<h1 style='text-align:center; padding-top:20%; font-family:sans-serif;'>Acceso denegado</h1>";
-    throw new Error("PIN incorrecto - ejecución detenida");
+    if (pinIngresado === PIN_CORRECTO) {
+      localStorage.setItem("pinAccesoAutorizado", "true");
+      desbloquearPantalla();
+    } else if (pinIngresado !== null) {
+      alert("❌ PIN incorrecto.");
+    }
+  }, 100);
+}
+
+function desbloquearPantalla() {
+  const lockScreen = document.getElementById("lock-overlay");
+  if (lockScreen) {
+    lockScreen.remove(); 
   }
 }
 
-if (!accesoPermitido()) {
-  solicitarPin();
-}
+document.addEventListener("DOMContentLoaded", verificarEstadoBloqueo);
 
-// -------------------- SEGURIDAD --------------------
+// ----------------- SEGURIDAD EXTRA -----------------
+
 document.addEventListener("contextmenu", (e) => e.preventDefault());
 
 function ctrlShiftKey(e, keyCode) {
@@ -39,7 +57,8 @@ document.onkeydown = (e) => {
     return false;
 };
 
-// -------------------- MENÚ --------------------
+// ----------------- MENÚ RESPONSIVE -----------------
+
 const showMenu = (toggleId, navId) => {
   const toggle = document.getElementById(toggleId),
     nav = document.getElementById(navId);
@@ -53,12 +72,13 @@ const showMenu = (toggleId, navId) => {
 
 showMenu("nav-toggle", "nav-menu");
 
-// -------------------- CHAT D-ID --------------------
+// ----------------- CHAT D-ID -----------------
+
 class DIDChat {
   constructor(containerId) {
     this.container = document.getElementById(containerId);
     this.chatUrl =
-      "https://studio.d-id.com/agents/share?id=v2_agt_BH9RwPZW&utm_source=copy&key=WVhWMGFEQjhOamRsTlRsaVpXRXdaV000WkRJMlkyVTRZVFppT0Rnd09rSmhVMVphYTFCNFFuaDFlV3hPVDE5amJFaFRjQT09";
+      "https://studio.d-id.com/agents/share?id=v2_agt_d7HIOetY&utm_source=copy&key=WjI5dloyeGxMVzloZFhSb01ud3hNREV5TXpJMk9UYzNORFUxTWpZek1EWTVNamc2VW01Uk56aGpNVFExWDFOZldHaFJWbU0xTm1WSQ==";
     this.iframe = null;
     this.init();
   }
@@ -68,6 +88,8 @@ class DIDChat {
   }
 
   createIframe() {
+    if (this.container.querySelector('.iframe-wrapper')) return;
+
     const wrapper = document.createElement("div");
     wrapper.className = "iframe-wrapper";
     this.iframe = document.createElement("iframe");
@@ -85,7 +107,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const chat = new DIDChat("chat-container");
 });
 
-// -------------------- GSAP ANIMACIONES --------------------
+// ----------------- GSAP ANIMACIONES -----------------
+
 gsap.to(".first", 1.5, {
   delay: 0.5,
   top: "-100%",
@@ -148,59 +171,47 @@ gsap.from(".home-social", {
   stagger: 0.2,
 });
 
-// -------------------- REFRESCO AUTOMÁTICO --------------------
+// ----------------- REFRESCO AUTOMÁTICO -----------------
+
 function iniciarRefresco() {
   let refreshTimeout;
   let cancelRefresh = false;
 
-  let message = document.getElementById("refresh-message");
+  let message = document.getElementById('refresh-message');
   if (!message) {
-    message = document.createElement("div");
-    message.id = "refresh-message";
-    message.innerHTML = `
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <div class="spinner" style="border: 4px solid #f3f3f3; border-top: 4px solid #fff; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite;"></div>
-        <span>Refrescando...</span>
-      </div>
-    `;
-    message.style.position = "fixed";
-    message.style.top = "50%";
-    message.style.left = "50%";
-    message.style.transform = "translate(-50%, -50%)";
-    message.style.backgroundColor = "rgba(0,0,0,0.85)";
-    message.style.color = "#fff";
-    message.style.padding = "20px 40px";
-    message.style.borderRadius = "10px";
-    message.style.fontSize = "22px";
-    message.style.zIndex = "9999";
-    message.style.display = "none";
+    message = document.createElement('div');
+    message.id = 'refresh-message';
+    message.innerText = '¿Sigues ahí? Refrescando en 5s...';
+    message.style.position = 'fixed';
+    message.style.top = '50%';
+    message.style.left = '50%';
+    message.style.transform = 'translate(-50%, -50%)';
+    message.style.backgroundColor = 'rgba(0,0,0,0.9)';
+    message.style.color = '#fff';
+    message.style.padding = '30px 50px';
+    message.style.borderRadius = '15px';
+    message.style.fontSize = '20px';
+    message.style.zIndex = '9999';
+    message.style.display = 'none';
+    message.style.boxShadow = '0 0 20px rgba(255,255,255,0.2)';
     document.body.appendChild(message);
-
-    const style = document.createElement("style");
-    style.innerHTML = `
-      @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-      }
-    `;
-    document.head.appendChild(style);
   }
 
   function startRefreshSequence() {
     cancelRefresh = false;
-    message.style.display = "block";
+    message.style.display = 'block';
 
     function cancelAction() {
       cancelRefresh = true;
-      message.style.display = "none";
+      message.style.display = 'none';
       clearTimeout(refreshTimeout);
-      document.removeEventListener("click", cancelAction);
-      document.removeEventListener("touchstart", cancelAction);
-      setTimeout(startRefreshSequence, 3 * 60 * 1000);
+      document.removeEventListener('click', cancelAction);
+      document.removeEventListener('touchstart', cancelAction);
+      setTimeout(startRefreshSequence, 5 * 60 * 1000);
     }
 
-    document.addEventListener("click", cancelAction);
-    document.addEventListener("touchstart", cancelAction);
+    document.addEventListener('click', cancelAction);
+    document.addEventListener('touchstart', cancelAction);
 
     refreshTimeout = setTimeout(() => {
       if (!cancelRefresh) {
@@ -209,17 +220,44 @@ function iniciarRefresco() {
     }, 5000);
   }
 
-  setTimeout(startRefreshSequence, 3 * 60 * 1000);
+  setTimeout(startRefreshSequence, 5 * 60 * 1000);
 }
 
-window.addEventListener("DOMContentLoaded", iniciarRefresco);
+iniciarRefresco();
 
-window.addEventListener("DOMContentLoaded", () => {
+// ----------------- CONTROL DE BOTONES (LOGICA MODIFICADA) -----------------
+
+document.addEventListener("DOMContentLoaded", () => {
   const refreshBtn = document.getElementById("refresh-btn");
+  const lockBtn = document.getElementById("lock-btn");
 
+  // BOTÓN DE CANDADO (Siempre bloquea y recarga)
+  if (lockBtn) {
+    lockBtn.addEventListener("click", () => {
+      localStorage.removeItem("pinAccesoAutorizado");
+      location.reload();
+    });
+  }
+
+  // BOTÓN DE REFRESCO (Lógica condicional)
   if (refreshBtn) {
     refreshBtn.addEventListener("click", () => {
-      location.reload();
+      // Guardamos la respuesta del usuario en una variable
+      // true = Aceptar, false = Cancelar
+      const cerrarSesion = confirm("¿Deseas limpiar caché y recargar? Esto también bloqueará la sesión.\n\n[ACEPTAR] = Bloquear y Recargar\n[CANCELAR] = Solo Recargar (Mantener sesión)");
+
+      if (cerrarSesion) {
+        // Opción ACEPTAR: Limpiamos storage (se pierde el PIN guardado)
+        localStorage.clear();
+        sessionStorage.clear();
+      } 
+      // Si el usuario da CANCELAR, saltamos el bloque 'if' anterior
+      // y pasamos directamente a la recarga, manteniendo el storage intacto.
+
+      // Recarga forzada (Cache Buster)
+      const url = new URL(window.location.href);
+      url.searchParams.set("r", Date.now().toString()); 
+      window.location.href = url.toString(); 
     });
   }
 });
