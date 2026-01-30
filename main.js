@@ -1,5 +1,5 @@
 // ----------------- CONFIGURACIÓN DE SEGURIDAD -----------------
-const PIN_CORRECTO = "5703";
+const PIN_CORRECTO = "5726";
 
 function verificarEstadoBloqueo() {
   const lockScreen = document.getElementById("lock-overlay");
