@@ -1,417 +1,263 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+// ----------------- CONFIGURACIÓN DE SEGURIDAD -----------------
+const PIN_CORRECTO = "5703";
 
-:root {
-  --first-color: #1f65c2;
-  --black-color: #000;
-  --white-color: #fff;
+function verificarEstadoBloqueo() {
+  const lockScreen = document.getElementById("lock-overlay");
+  if (!lockScreen) return;
 
-  --body-font: "Poppins", sans-serif;
-  --h1-font-size: 2.5rem;
-  --h2-font-size: 1rem;
-  --normal-font-size: 0.93rem;
-  --small-font-size: 0.81rem;
+  // Si ya se ingresó el PIN anteriormente, quitamos el escudo invisible
+  if (localStorage.getItem("pinAccesoAutorizado") === "true") {
+    desbloquearPantalla();
+  }
 
-  --z-back: -10;
-  --z-normal: 1;
-  --z-tooltip: 10;
-  --z-fixed: 100;
-  --z-modal: 1000;
-
-  --header-height: 3rem;
-  --font-bold: 700;
+  // Evento: Al hacer clic en la capa invisible, pedir PIN
+  lockScreen.addEventListener("click", () => {
+    solicitarPin();
+  });
 }
 
-*,
-::before,
-::after {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  text-decoration: none;
-  list-style: none;
+function solicitarPin() {
+  setTimeout(() => {
+    const pinIngresado = prompt("🔒 STAND PROTEGIDO\nPor favor, introduce el PIN de acceso:");
+
+    if (pinIngresado === PIN_CORRECTO) {
+      localStorage.setItem("pinAccesoAutorizado", "true");
+      desbloquearPantalla();
+    } else if (pinIngresado !== null) {
+      alert("❌ PIN incorrecto.");
+    }
+  }, 100);
 }
 
-body {
-  font-family: var(--body-font);
-  background-color: var(--black-color);
-  color: var(--white-color);
-  font-weight: var(--font-bold);
-  overflow: hidden;
-}
-
-#chat-container {
-  width: 60%;
-  max-width: 800px;
-  height: calc(90vh - 60px);
-  position: relative;
-  overflow: hidden;
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 20px;
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-#chat-container:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.45);
-}
-
-.iframe-wrapper {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  overflow: hidden;
-  width: 100%;
-  /* z-index bajo para que quede detrás del escudo invisible */
-  z-index: 1; 
-}
-
-.did-chat-iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border: none;
-}
-
-img {
-  max-width: 100%;
-  height: auto;
-}
-
-.bd-grid {
-  max-width: 1200px;
-  margin-left: 1rem;
-  margin-right: 1rem;
-}
-
-.l-header {
-  width: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: var(--z-fixed);
-  background-color: var(--black-color);
-}
-
-.nav {
-  height: var(--header-height);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-weight: var(--font-bold);
-}
-
-.nav-list {
-  text-align: center;
-}
-
-.nav-item {
-  margin-bottom: 2rem;
-}
-
-.nav-link {
-  color: var(--white-color);
-}
-
-.nav-link:hover::after {
-  position: absolute;
-  content: "";
-  width: 1.5rem;
-  height: 0.1875rem;
-  left: 0.125rem;
-  top: 2.125rem;
-  background-color: var(--first-color);
-}
-
-.nav-logo {
-  font-size: var(--normal-font-size);
-  color: var(--white-color);
-}
-
-.nav-logo span {
-  color: blue;
-}
-
-.nav-toggle {
-  cursor: pointer;
-  font-size: 1.5rem;
-}
-
-.l-main {
-  height: calc(100vh - var(--header-height));
-  background-color: var(--black-color);
-}
-
-.home {
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: max-content max-content;
-  align-content: space-around;
-  row-gap: 0rem;
-  height: 100%;
-  font-weight: var(--font-bold);
-}
-
-.home-information {
-  padding-left: 1.5rem;
-  border-left: 5px solid var(--white-color);
-  z-index: var(--z-tooltip);
-}
-
-.home-pressent {
-  font-size: var(--small-font-size);
-}
-
-.home-title {
-  font-size: var(--h1-font-size);
-}
-
-.home-skill {
-  font-size: var(--h2-font-size);
-}
-
-.home-button {
-  display: inline-block;
-  margin-top: 1.5rem;
-  font-size: 0.75rem;
-  color: var(--white-color);
-  padding: 0.625rem 1rem;
-  border-radius: 0.25rem;
-  background-image: linear-gradient(
-    to right,
-    var(--black-color),
-    var(--first-color)
-  );
-}
-
-.home-img {
-  position: absolute;
-  right: 20%;
-  bottom: 80px;
-  width: 50%;
-  z-index: var(--z-normal);
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-}
-
-.home-social {
-  display: flex;
-  flex-direction: column;
-  padding-bottom: 1rem;
-}
-
-.home-social-icon {
-  margin-bottom: 2rem;
-  font-size: 1.33rem;
-  cursor: pointer;
-  transition: 0.5s;
-}
-
-.home-social-icon:hover {
-  color: var(--first-color);
-}
-
-.overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: var(--z-modal);
-}
-
-.first {
-  background-color: var(--first-color);
-}
-
-.second {
-  background-color: var(--first-color);
-  left: 33.3%;
-}
-
-.third {
-  background-color: var(--first-color);
-  left: 66.6%;
-}
-
-@media screen and (max-width: 1200px) {
-  .home-img {
-    right: 3%;
-    width: 80%;
+function desbloquearPantalla() {
+  const lockScreen = document.getElementById("lock-overlay");
+  if (lockScreen) {
+    lockScreen.remove(); 
   }
 }
 
-@media screen and (max-width: 768px) {
-  .nav-menu {
-    position: fixed;
-    top: -100%;
-    left: 0;
-    background-image: linear-gradient(var(--black-color), var(--first-color));
-    width: 100%;
-    height: 35%;
-    padding: 1.5rem;
-    border-radius: 0 0 1rem 1rem;
-    transition: 0.5s;
+document.addEventListener("DOMContentLoaded", verificarEstadoBloqueo);
+
+// ----------------- SEGURIDAD EXTRA -----------------
+
+document.addEventListener("contextmenu", (e) => e.preventDefault());
+
+function ctrlShiftKey(e, keyCode) {
+  return e.ctrlKey && e.shiftKey && e.keyCode === keyCode.charCodeAt(0);
+}
+
+document.onkeydown = (e) => {
+  if (
+    event.keyCode === 123 ||
+    ctrlShiftKey(e, "I") ||
+    ctrlShiftKey(e, "J") ||
+    ctrlShiftKey(e, "C") ||
+    (e.ctrlKey && e.keyCode === "U".charCodeAt(0))
+  )
+    return false;
+};
+
+// ----------------- MENÚ RESPONSIVE -----------------
+
+const showMenu = (toggleId, navId) => {
+  const toggle = document.getElementById(toggleId),
+    nav = document.getElementById(navId);
+
+  if (toggle && nav) {
+    toggle.addEventListener("click", () => {
+      nav.classList.toggle("show");
+    });
+  }
+};
+
+showMenu("nav-toggle", "nav-menu");
+
+// ----------------- CHAT D-ID -----------------
+
+class DIDChat {
+  constructor(containerId) {
+    this.container = document.getElementById(containerId);
+    this.chatUrl =
+      "https://studio.d-id.com/agents/share?id=v2_agt_UV_zgL-k&utm_source=copy&key=WjI5dloyeGxMVzloZFhSb01ud3hNREV5TXpJMk9UYzNORFUxTWpZek1EWTVNamc2VW01Uk56aGpNVFExWDFOZldHaFJWbU0xTm1WSQ==";
+    this.iframe = null;
+    this.init();
   }
 
-  .show {
-    top: var(--header-height);
+  init() {
+    this.createIframe();
   }
 
-  #chat-container {
-    height: 80vh;
-    margin: 0;
-    width: 100%;
-  }
+  createIframe() {
+    if (this.container.querySelector('.iframe-wrapper')) return;
 
-  .home-img {
-    position: initial;
-    width: 100%;
-  }
+    const wrapper = document.createElement("div");
+    wrapper.className = "iframe-wrapper";
+    this.iframe = document.createElement("iframe");
+    this.iframe.className = "did-chat-iframe fade-in";
+    this.iframe.src = this.chatUrl;
+    this.iframe.allow = "camera;microphone;clipboard-write";
+    this.iframe.title = "D-ID Chat Interface";
 
-  .home-social {
-    display: none;
-  }
-
-  html,
-  body {
-    padding: 0px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    margin-top: 5px;
+    wrapper.appendChild(this.iframe);
+    this.container.appendChild(wrapper);
   }
 }
 
-@media screen and (min-width: 768px) {
-  :root {
-    --h1-font-size: 4.5rem;
-    --h2-font-size: 2rem;
-    --normal-font-size: 1rem;
-    --small-font-size: 1.37rem;
+document.addEventListener("DOMContentLoaded", () => {
+  const chat = new DIDChat("chat-container");
+});
+
+// ----------------- GSAP ANIMACIONES -----------------
+
+gsap.to(".first", 1.5, {
+  delay: 0.5,
+  top: "-100%",
+  ease: Expo.easeInOut,
+});
+
+gsap.to(".second", 1.5, {
+  delay: 0.7,
+  top: "-100%",
+  ease: Expo.easeInOut,
+});
+
+gsap.to(".third", 1.5, {
+  delay: 0.9,
+  top: "-100%",
+  ease: Expo.easeInOut,
+});
+
+gsap.from(".home-img", { opacity: 0, duration: 2, delay: 2, x: 60 });
+
+gsap.from(".home-information", {
+  opacity: 0,
+  duration: 3,
+  delay: 2.3,
+  y: 25,
+});
+
+gsap.from(".anime-text", {
+  opacity: 0,
+  duration: 3,
+  delay: 2.3,
+  y: 25,
+  ease: "expo.out",
+  stagger: 0.3,
+});
+
+gsap.from(".nav-logo", {
+  opacity: 0,
+  duration: 3,
+  delay: 3.2,
+  y: 25,
+  ease: "expo.out",
+});
+
+gsap.from(".nav-item", {
+  opacity: 0,
+  duration: 3,
+  delay: 3.2,
+  y: 25,
+  ease: "expo.out",
+  stagger: 0.2,
+});
+
+gsap.from(".home-social", {
+  opacity: 0,
+  duration: 3,
+  delay: 4,
+  y: 25,
+  ease: "expo.out",
+  stagger: 0.2,
+});
+
+// ----------------- REFRESCO AUTOMÁTICO -----------------
+
+function iniciarRefresco() {
+  let refreshTimeout;
+  let cancelRefresh = false;
+
+  let message = document.getElementById('refresh-message');
+  if (!message) {
+    message = document.createElement('div');
+    message.id = 'refresh-message';
+    message.innerText = '¿Sigues ahí? Refrescando en 5s...';
+    message.style.position = 'fixed';
+    message.style.top = '50%';
+    message.style.left = '50%';
+    message.style.transform = 'translate(-50%, -50%)';
+    message.style.backgroundColor = 'rgba(0,0,0,0.9)';
+    message.style.color = '#fff';
+    message.style.padding = '30px 50px';
+    message.style.borderRadius = '15px';
+    message.style.fontSize = '20px';
+    message.style.zIndex = '9999';
+    message.style.display = 'none';
+    message.style.boxShadow = '0 0 20px rgba(255,255,255,0.2)';
+    document.body.appendChild(message);
   }
 
-  body {
-    margin: 0;
+  function startRefreshSequence() {
+    cancelRefresh = false;
+    message.style.display = 'block';
+
+    function cancelAction() {
+      cancelRefresh = true;
+      message.style.display = 'none';
+      clearTimeout(refreshTimeout);
+      document.removeEventListener('click', cancelAction);
+      document.removeEventListener('touchstart', cancelAction);
+      setTimeout(startRefreshSequence, 5 * 60 * 1000);
+    }
+
+    document.addEventListener('click', cancelAction);
+    document.addEventListener('touchstart', cancelAction);
+
+    refreshTimeout = setTimeout(() => {
+      if (!cancelRefresh) {
+        location.reload();
+      }
+    }, 5000);
   }
 
-  .l-main {
-    height: 100vh;
-  }
-
-  .nav {
-    height: calc(var(--header-height) + 1rem);
-  }
-
-  .nav.bd-grid {
-    padding: 1rem;
-  }
-
-  .nav-list {
-    display: flex;
-    padding-top: 0;
-  }
-
-  .nav-item {
-    margin-left: 3rem;
-    margin-bottom: 0;
-  }
-
-  .nav-toggle {
-    display: none;
-  }
-
-  .home {
-    grid-template-rows: max-content 20px;
-    align-content: center;
-  }
-
-  .home-information {
-    margin-top: 2rem;
-  }
-
-  .home-social {
-    flex-direction: row;
-    padding-top: 8rem;
-    padding-bottom: 0;
-  }
-
-  .home-social-icon {
-    margin-right: 2rem;
-    margin-bottom: 0;
-  }
+  setTimeout(startRefreshSequence, 5 * 60 * 1000);
 }
 
-@media screen and (min-width: 1200px) {
-  .bd-grid {
-    margin-left: auto;
-    margin-right: auto;
+iniciarRefresco();
+
+// ----------------- CONTROL DE BOTONES (LOGICA MODIFICADA) -----------------
+
+document.addEventListener("DOMContentLoaded", () => {
+  const refreshBtn = document.getElementById("refresh-btn");
+  const lockBtn = document.getElementById("lock-btn");
+
+  // BOTÓN DE CANDADO (Siempre bloquea y recarga)
+  if (lockBtn) {
+    lockBtn.addEventListener("click", () => {
+      localStorage.removeItem("pinAccesoAutorizado");
+      location.reload();
+    });
   }
-}
 
-/* ----------------- BOTONES DE CONTROL (TOP RIGHT) ----------------- */
+  // BOTÓN DE REFRESCO (Lógica condicional)
+  if (refreshBtn) {
+    refreshBtn.addEventListener("click", () => {
+      // Guardamos la respuesta del usuario en una variable
+      // true = Aceptar, false = Cancelar
+      const cerrarSesion = confirm("¿Deseas limpiar caché y recargar? Esto también bloqueará la sesión.\n\n[ACEPTAR] = Bloquear y Recargar\n[CANCELAR] = Solo Recargar (Mantener sesión)");
 
-.control-buttons {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  display: flex;
-  gap: 15px; /* Espacio entre los botones */
-  z-index: 9999;
-}
+      if (cerrarSesion) {
+        // Opción ACEPTAR: Limpiamos storage (se pierde el PIN guardado)
+        localStorage.clear();
+        sessionStorage.clear();
+      } 
+      // Si el usuario da CANCELAR, saltamos el bloque 'if' anterior
+      // y pasamos directamente a la recarga, manteniendo el storage intacto.
 
-.control-buttons ion-icon {
-  font-size: 36px;
-  color: var(--white-color);
-  background: rgba(0, 0, 0, 0.3); /* Un fondo sutil para mejor contraste */
-  border-radius: 50%;
-  padding: 5px;
-  cursor: pointer;
-  opacity: 0.6;
-  backdrop-filter: blur(4px);
-  transition: all 0.3s ease;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.control-buttons ion-icon:hover {
-  opacity: 1;
-  background: rgba(255, 255, 255, 0.1);
-  transform: scale(1.1);
-  box-shadow: 0 0 15px rgba(31, 101, 194, 0.6); /* Brillo azul (tu color first-color) */
-}
-
-/* Animación específica para el botón de refrescar al hacer hover */
-#refresh-btn:hover {
-  transform: rotate(180deg) scale(1.1);
-}
-
-/* ------------------------------------------------ */
-/* NUEVO: BLOQUEO INVISIBLE (GHOST LAYER)           */
-/* ------------------------------------------------ */
-
-#lock-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  
-  /* Fondo transparente para que se vea el chat debajo */
-  background: transparent; 
-  
-  /* Z-index alto para interceptar el clic antes que el iframe */
-  z-index: 50; 
-  
-  cursor: pointer; /* Muestra la manito para indicar que hay interacción */
-}
-
-/* Clase que JS usará para eliminar el bloqueo */
-.unlocked {
-  display: none !important;
-}
+      // Recarga forzada (Cache Buster)
+      const url = new URL(window.location.href);
+      url.searchParams.set("r", Date.now().toString()); 
+      window.location.href = url.toString(); 
+    });
+  }
+});
