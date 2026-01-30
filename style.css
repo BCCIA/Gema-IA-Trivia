@@ -66,6 +66,8 @@ body {
   bottom: 0;
   overflow: hidden;
   width: 100%;
+  /* z-index bajo para que quede detrás del escudo invisible */
+  z-index: 1; 
 }
 
 .did-chat-iframe {
@@ -186,34 +188,6 @@ img {
     var(--black-color),
     var(--first-color)
   );
-}
-
-.header,
-.footer {
-  height: 7%;
-  width: 100%;
-  background: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(8px);
-  position: absolute;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  padding: 0 20px;
-  font-weight: 500;
-  color: #333;
-}
-
-.header {
-  top: 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 20px 20px 0 0;
-}
-
-.footer {
-  bottom: 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 0 0 20px 20px;
 }
 
 .home-img {
@@ -381,22 +355,63 @@ img {
   }
 }
 
-#refresh-btn {
+/* ----------------- BOTONES DE CONTROL (TOP RIGHT) ----------------- */
+
+.control-buttons {
   position: fixed;
   top: 20px;
   right: 20px;
-  font-size: 36px;
-  color: white;
-  background: transparent;
-  border: none;
-  cursor: pointer;
+  display: flex;
+  gap: 15px; /* Espacio entre los botones */
   z-index: 9999;
+}
+
+.control-buttons ion-icon {
+  font-size: 36px;
+  color: var(--white-color);
+  background: rgba(0, 0, 0, 0.3); /* Un fondo sutil para mejor contraste */
+  border-radius: 50%;
+  padding: 5px;
+  cursor: pointer;
   opacity: 0.6;
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  backdrop-filter: blur(4px);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-#refresh-btn:hover {
+.control-buttons ion-icon:hover {
   opacity: 1;
-  transform: rotate(20deg);
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.1);
+  box-shadow: 0 0 15px rgba(31, 101, 194, 0.6); /* Brillo azul (tu color first-color) */
 }
 
+/* Animación específica para el botón de refrescar al hacer hover */
+#refresh-btn:hover {
+  transform: rotate(180deg) scale(1.1);
+}
+
+/* ------------------------------------------------ */
+/* NUEVO: BLOQUEO INVISIBLE (GHOST LAYER)           */
+/* ------------------------------------------------ */
+
+#lock-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  
+  /* Fondo transparente para que se vea el chat debajo */
+  background: transparent; 
+  
+  /* Z-index alto para interceptar el clic antes que el iframe */
+  z-index: 50; 
+  
+  cursor: pointer; /* Muestra la manito para indicar que hay interacción */
+}
+
+/* Clase que JS usará para eliminar el bloqueo */
+.unlocked {
+  display: none !important;
+}
